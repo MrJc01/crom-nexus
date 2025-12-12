@@ -1,0 +1,6 @@
+{
+    "name": "currency",
+    "version": "1.0.0",
+    "main": "script.nx.js",
+    "permissions": ["http"]
+}

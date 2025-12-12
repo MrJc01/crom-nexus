@@ -1,0 +1,8 @@
+{
+  "name": "github",
+  "version": "1.0.0",
+  "description": "GitHub repository and user info",
+  "author": "MrJc01",
+  "commands": ["repo", "user", "search"],
+  "dependencies": []
+}

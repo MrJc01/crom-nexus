@@ -1,0 +1,6 @@
+{
+    "name": "hackernews",
+    "version": "1.0.0",
+    "main": "script.nx.js",
+    "permissions": ["http"]
+}

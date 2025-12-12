@@ -1,0 +1,8 @@
+{
+  "name": "news",
+  "version": "1.0.0",
+  "description": "News headlines from Hacker News",
+  "author": "MrJc01",
+  "commands": ["top", "open"],
+  "dependencies": []
+}

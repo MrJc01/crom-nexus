@@ -1,0 +1,8 @@
+{
+  "name": "google",
+  "version": "1.0.0",
+  "description": "Google Search via terminal",
+  "author": "MrJc01",
+  "commands": ["search", "lucky", "open"],
+  "dependencies": []
+}

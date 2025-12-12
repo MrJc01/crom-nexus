@@ -81,7 +81,9 @@ func (t *TUIModule) Register(vm *goja.Runtime, nexus *goja.Object) {
 	tuiObj.Set("box", t.box)
 	tuiObj.Set("input", t.input)
 	tuiObj.Set("list", t.list)
+	tuiObj.Set("list", t.list)
 	tuiObj.Set("confirm", t.confirm)
+	tuiObj.Set("header", t.header)
 }
 
 // print renders text with optional color
@@ -116,6 +118,14 @@ func (t *TUIModule) print(call goja.FunctionCall) goja.Value {
 func (t *TUIModule) title(call goja.FunctionCall) goja.Value {
 	text := call.Argument(0).String()
 	fmt.Println(titleStyle.Render("🚀 " + text))
+	return goja.Undefined()
+}
+
+// header is an alias for title (or slightly different style)
+func (t *TUIModule) header(call goja.FunctionCall) goja.Value {
+	text := call.Argument(0).String()
+	fmt.Println(titleStyle.Render(text))
+	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#555555")).Render(strings.Repeat("─", len(text))))
 	return goja.Undefined()
 }
 
