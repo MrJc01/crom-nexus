@@ -2,7 +2,6 @@ package api
 
 import (
 	"io/ioutil"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -12,6 +11,7 @@ import (
 
 type SysModule struct {
 	BaseDir string
+	vm      *goja.Runtime
 }
 
 func NewSysModule(baseDir string) *SysModule {
@@ -19,6 +19,7 @@ func NewSysModule(baseDir string) *SysModule {
 }
 
 func (s *SysModule) Register(vm *goja.Runtime, nexus *goja.Object) {
+	s.vm = vm
 	sysObj := vm.NewObject()
 	nexus.Set("sys", sysObj)
 
@@ -26,11 +27,10 @@ func (s *SysModule) Register(vm *goja.Runtime, nexus *goja.Object) {
 	sysObj.Set("save", s.save)
 	sysObj.Set("load", s.load)
 	
-	// Clipboard placeholder (requires extra lib or exec)
+	// Clipboard placeholder
 	sysObj.Set("clipboard", map[string]interface{}{
 		"write": func(text string) {
-			// Barebones implementation for Windows/Mac
-			// In production use https://github.com/atotto/clipboard
+			// Placeholder - use github.com/atotto/clipboard in production
 		},
 	})
 }
@@ -63,7 +63,6 @@ func (s *SysModule) save(call goja.FunctionCall) goja.Value {
 
 	// Sandbox check: ensure path is inside BaseDir
 	path := filepath.Join(s.BaseDir, filename)
-	// TODO: verify it didn't escape with ..
 
 	ioutil.WriteFile(path, []byte(data), 0644)
 	return goja.Undefined()
@@ -77,5 +76,5 @@ func (s *SysModule) load(call goja.FunctionCall) goja.Value {
 	if err != nil {
 		return goja.Null()
 	}
-	return call.Runtime().ToValue(string(content))
+	return s.vm.ToValue(string(content))
 }

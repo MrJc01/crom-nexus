@@ -7,13 +7,16 @@ import (
 	"github.com/dop251/goja"
 )
 
-type DOMModule struct{}
+type DOMModule struct {
+	vm *goja.Runtime
+}
 
 func NewDOMModule() *DOMModule {
 	return &DOMModule{}
 }
 
 func (d *DOMModule) Register(vm *goja.Runtime, nexus *goja.Object) {
+	d.vm = vm
 	domObj := vm.NewObject()
 	nexus.Set("dom", domObj)
 
@@ -26,6 +29,8 @@ func (d *DOMModule) parse(call goja.FunctionCall) goja.Value {
 	if err != nil {
 		panic(err)
 	}
+
+	vm := d.vm
 
 	// Wrapper object for Document
 	docWrapper := map[string]interface{}{
@@ -44,9 +49,9 @@ func (d *DOMModule) parse(call goja.FunctionCall) goja.Value {
 				results = append(results, el)
 			})
 
-			return call.Runtime().ToValue(results)
+			return vm.ToValue(results)
 		},
 	}
 
-	return call.Runtime().ToValue(docWrapper)
+	return vm.ToValue(docWrapper)
 }

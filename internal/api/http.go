@@ -2,7 +2,6 @@ package api
 
 import (
 	"bytes"
-	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/http/cookiejar"
@@ -14,6 +13,7 @@ import (
 // HTTPModule wraps net/http for the Script
 type HTTPModule struct {
 	Client *http.Client
+	vm     *goja.Runtime
 }
 
 // NewHTTPModule creates a client with cookie support
@@ -29,6 +29,7 @@ func NewHTTPModule() *HTTPModule {
 
 // Register injects `Nexus.http`
 func (h *HTTPModule) Register(vm *goja.Runtime, nexus *goja.Object) {
+	h.vm = vm
 	httpObj := vm.NewObject()
 	nexus.Set("http", httpObj)
 
@@ -67,36 +68,29 @@ func (h *HTTPModule) request(call goja.FunctionCall) goja.Value {
 	defer resp.Body.Close()
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
-	
+
 	result := map[string]interface{}{
 		"status": resp.StatusCode,
 		"body":   string(bodyBytes),
 	}
 
-	return call.Runtime().ToValue(result)
+	return h.vm.ToValue(result)
 }
 
 func (h *HTTPModule) get(call goja.FunctionCall) goja.Value {
 	url := call.Argument(0).String()
-	// Reuse request logic by constructing map
-	opts := map[string]interface{}{
-		"method": "GET",
-		"url":    url,
-	}
-	// Note: In a real implementation we would refactor to share internal logic efficiently
-	// For MVP, we simply call the Go internal logic of request (if we separated it) or just use http.Get here
-	
+
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("User-Agent", "Nexus/1.0 (Compatible; Golang)")
-	
+
 	resp, err := h.Client.Do(req)
 	if err != nil {
 		panic(err)
 	}
 	defer resp.Body.Close()
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
-	
-	return call.Runtime().ToValue(map[string]interface{}{
+
+	return h.vm.ToValue(map[string]interface{}{
 		"status": resp.StatusCode,
 		"body":   string(bodyBytes),
 	})
@@ -105,19 +99,19 @@ func (h *HTTPModule) get(call goja.FunctionCall) goja.Value {
 func (h *HTTPModule) post(call goja.FunctionCall) goja.Value {
 	url := call.Argument(0).String()
 	data := call.Argument(1).String()
-	
+
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(data)))
 	req.Header.Set("User-Agent", "Nexus/1.0 (Compatible; Golang)")
 	req.Header.Set("Content-Type", "application/json")
-	
+
 	resp, err := h.Client.Do(req)
 	if err != nil {
 		panic(err)
 	}
 	defer resp.Body.Close()
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
-	
-	return call.Runtime().ToValue(map[string]interface{}{
+
+	return h.vm.ToValue(map[string]interface{}{
 		"status": resp.StatusCode,
 		"body":   string(bodyBytes),
 	})
