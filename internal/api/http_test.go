@@ -65,7 +65,19 @@ func TestHTTPModule_Get(t *testing.T) {
 	}
 
 	obj := result.Export().(map[string]interface{})
-	if obj["status"].(int64) != 200 {
+
+	// Handle different int types
+	var status int64
+	switch v := obj["status"].(type) {
+	case int:
+		status = int64(v)
+	case int64:
+		status = v
+	case float64:
+		status = int64(v)
+	}
+
+	if status != 200 {
 		t.Errorf("Expected status 200, got %v", obj["status"])
 	}
 	if obj["body"].(string) != `{"message":"hello"}` {
@@ -104,7 +116,19 @@ func TestHTTPModule_Post(t *testing.T) {
 	}
 
 	obj := result.Export().(map[string]interface{})
-	if obj["status"].(int64) != 201 {
+
+	// Handle different int types
+	var status int64
+	switch v := obj["status"].(type) {
+	case int:
+		status = int64(v)
+	case int64:
+		status = v
+	case float64:
+		status = int64(v)
+	}
+
+	if status != 201 {
 		t.Errorf("Expected status 201, got %v", obj["status"])
 	}
 }
