@@ -1,8 +1,9 @@
 # Nexus: O Runtime de Terminal para a Web
 
-![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Go](https://img.shields.io/badge/go-1.19+-00ADD8.svg)
+![Go](https://img.shields.io/badge/go-1.22+-00ADD8.svg)
+[![CI](https://github.com/MrJc01/crom-nexus/actions/workflows/ci.yml/badge.svg)](https://github.com/MrJc01/crom-nexus/actions/workflows/ci.yml)
 
 > "A Internet é o SO. O Nexus é o Kernel."
 
@@ -26,16 +27,16 @@ nexus @hackernews
 
 ## 📦 Instalação
 
-### Linux / MacOS
+### Linux / macOS
 
 ```bash
-curl -sL https://nexus.sh/install | bash
+curl -sL https://raw.githubusercontent.com/MrJc01/crom-nexus/main/scripts/install.sh | bash
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
-iwr https://nexus.sh/install.ps1 -useb | iex
+iwr https://raw.githubusercontent.com/MrJc01/crom-nexus/main/scripts/install.ps1 -useb | iex
 ```
 
 ### Compilar do Código Fonte
@@ -43,9 +44,21 @@ iwr https://nexus.sh/install.ps1 -useb | iex
 ```bash
 git clone https://github.com/MrJc01/crom-nexus
 cd crom-nexus
-go build ./cmd/nexus
+make build
 ./nexus help
 ```
+
+### Download Direto
+
+Baixe a última versão em [GitHub Releases](https://github.com/MrJc01/crom-nexus/releases/latest).
+
+| Plataforma | Arquitetura | Arquivo |
+|:-----------|:------------|:--------|
+| Linux | x64 | `nexus-linux-amd64` |
+| Linux | ARM64 | `nexus-linux-arm64` |
+| macOS | x64 | `nexus-darwin-amd64` |
+| macOS | Apple Silicon | `nexus-darwin-arm64` |
+| Windows | x64 | `nexus-windows-amd64.exe` |
 
 ---
 
@@ -67,8 +80,9 @@ go build ./cmd/nexus
 ### Executando Scripts
 
 ```bash
-nexus run script.js
-nexus exec "console.log('Olá Mundo')"
+nexus run script.js          # Executar arquivo
+nexus exec "console.log(1)"  # Executar JS inline
+echo "Nexus.tui.print('Oi')" | nexus run -  # Executar via stdin
 ```
 
 ### Gerenciando Entidades
@@ -79,12 +93,58 @@ nexus list               # Listar instalados
 nexus remove @nome       # Desinstalar
 ```
 
+### Formatos de Saída
+
+```bash
+nexus @ip --json         # Saída JSON
+nexus @ip --tui          # Interface Terminal (padrão)
+nexus @ip --md           # Saída Markdown
+```
+
+---
+
+## 🧪 Desenvolvimento
+
+```bash
+# Executar todos os testes
+make test
+
+# Executar apenas testes Go
+make test-go
+
+# Executar linter
+make lint
+
+# Compilar para todas as plataformas
+make build-all
+
+# Gerar relatório de cobertura
+make coverage
+```
+
+---
+
+## 📖 Documentação
+
+- [Guia de Arquitetura](docs/ARCHITECTURE_PT.md) - Funcionamento interno
+- [Guia de Scripts](docs/SCRIPTING_GUIDE_PT.md) - Crie seus próprios scripts
+- [Relatório de Testes](docs/TEST_REPORT_PT.md) - Validação v3.0
+- [Changelog](CHANGELOG.md) - Histórico de versões
+
 ---
 
 ## 🤝 Contribuindo
 
-Veja [ARCHITECTURE_PT.md](docs/ARCHITECTURE_PT.md) para detalhes internos e [SCRIPTING_GUIDE_PT.md](docs/SCRIPTING_GUIDE_PT.md) para criar seus próprios agentes.
+1. Faça um Fork do repositório
+2. Crie sua branch de feature (`git checkout -b feature/incrivel`)
+3. Commit suas mudanças (`git commit -m 'Adiciona feature incrível'`)
+4. Push para a branch (`git push origin feature/incrivel`)
+5. Abra um Pull Request
 
-Confira o [Relatório de Testes](docs/TEST_REPORT_PT.md) para validação da versão v3.0.
+Veja [ARCHITECTURE_PT.md](docs/ARCHITECTURE_PT.md) para detalhes internos.
 
-Licença: MIT
+---
+
+## 📄 Licença
+
+Licença MIT - veja [LICENSE](LICENSE) para detalhes.

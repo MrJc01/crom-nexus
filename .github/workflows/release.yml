@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache: true
+
+      - name: Run tests
+        run: go test ./... -v
+
+      - name: Build all platforms
+        run: |
+          mkdir -p dist
+          
+          # Linux AMD64
+          echo "Building linux-amd64..."
+          GOOS=linux GOARCH=amd64 go build -ldflags "-s -w -X main.Version=${{ github.ref_name }}" -o dist/nexus-linux-amd64 ./cmd/nexus
+          
+          # Linux ARM64
+          echo "Building linux-arm64..."
+          GOOS=linux GOARCH=arm64 go build -ldflags "-s -w -X main.Version=${{ github.ref_name }}" -o dist/nexus-linux-arm64 ./cmd/nexus
+          
+          # macOS AMD64
+          echo "Building darwin-amd64..."
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w -X main.Version=${{ github.ref_name }}" -o dist/nexus-darwin-amd64 ./cmd/nexus
+          
+          # macOS ARM64 (Apple Silicon)
+          echo "Building darwin-arm64..."
+          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w -X main.Version=${{ github.ref_name }}" -o dist/nexus-darwin-arm64 ./cmd/nexus
+          
+          # Windows AMD64
+          echo "Building windows-amd64..."
+          GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X main.Version=${{ github.ref_name }}" -o dist/nexus-windows-amd64.exe ./cmd/nexus
+
+      - name: Create checksums
+        run: |
+          cd dist
+          sha256sum * > checksums.txt
+          cat checksums.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/nexus-linux-amd64
+            dist/nexus-linux-arm64
+            dist/nexus-darwin-amd64
+            dist/nexus-darwin-arm64
+            dist/nexus-windows-amd64.exe
+            dist/checksums.txt
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

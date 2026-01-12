@@ -4,10 +4,25 @@
   "description": "Official Nexus scripts collection",
   "author": "MrJc01",
   "scripts": [
-    { "name": "google", "version": "1.0.0", "path": "google" },
-    { "name": "weather", "version": "1.0.0", "path": "weather" },
-    { "name": "github", "version": "1.0.0", "path": "github" },
-    { "name": "news", "version": "1.0.0", "path": "news" },
-    { "name": "ai", "version": "1.0.0", "path": "ai" }
+    {
+      "name": "google",
+      "version": "1.0.0",
+      "path": "google"
+    },
+    {
+      "name": "weather",
+      "version": "1.0.0",
+      "path": "weather"
+    },
+    {
+      "name": "github",
+      "version": "1.0.0",
+      "path": "github"
+    },
+    {
+      "name": "news",
+      "version": "1.0.0",
+      "path": "news"
+    }
   ]
 }

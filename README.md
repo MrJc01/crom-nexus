@@ -1,8 +1,9 @@
 # Nexus: The Terminal Runtime for the Web
 
-![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Go](https://img.shields.io/badge/go-1.19+-00ADD8.svg)
+![Go](https://img.shields.io/badge/go-1.22+-00ADD8.svg)
+[![CI](https://github.com/MrJc01/crom-nexus/actions/workflows/ci.yml/badge.svg)](https://github.com/MrJc01/crom-nexus/actions/workflows/ci.yml)
 
 > "The Internet is the OS. Nexus is the Kernel."
 
@@ -26,16 +27,16 @@ nexus @hackernews
 
 ## 📦 Installation
 
-### Linux / MacOS
+### Linux / macOS
 
 ```bash
-curl -sL https://nexus.sh/install | bash
+curl -sL https://raw.githubusercontent.com/MrJc01/crom-nexus/main/scripts/install.sh | bash
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
-iwr https://nexus.sh/install.ps1 -useb | iex
+iwr https://raw.githubusercontent.com/MrJc01/crom-nexus/main/scripts/install.ps1 -useb | iex
 ```
 
 ### Build from Source
@@ -43,9 +44,21 @@ iwr https://nexus.sh/install.ps1 -useb | iex
 ```bash
 git clone https://github.com/MrJc01/crom-nexus
 cd crom-nexus
-go build ./cmd/nexus
+make build
 ./nexus help
 ```
+
+### Download Binary
+
+Download the latest release from [GitHub Releases](https://github.com/MrJc01/crom-nexus/releases/latest).
+
+| Platform | Architecture | Download |
+|:---------|:-------------|:---------|
+| Linux | x64 | `nexus-linux-amd64` |
+| Linux | ARM64 | `nexus-linux-arm64` |
+| macOS | x64 | `nexus-darwin-amd64` |
+| macOS | Apple Silicon | `nexus-darwin-arm64` |
+| Windows | x64 | `nexus-windows-amd64.exe` |
 
 ---
 
@@ -67,8 +80,9 @@ go build ./cmd/nexus
 ### Running Scripts
 
 ```bash
-nexus run script.js
-nexus exec "console.log('Hello World')"
+nexus run script.js          # Run a script file
+nexus exec "console.log(1)"  # Execute inline JS
+echo "Nexus.tui.print('Hi')" | nexus run -  # Execute from stdin
 ```
 
 ### Managing Entities
@@ -79,10 +93,57 @@ nexus list               # Show installed
 nexus remove @name       # Uninstall
 ```
 
+### Output Formats
+
+```bash
+nexus @ip --json         # JSON output
+nexus @ip --tui          # Terminal UI (default)
+nexus @ip --md           # Markdown output
+```
+
+---
+
+## 🧪 Development
+
+```bash
+# Run all tests
+make test
+
+# Run only Go unit tests
+make test-go
+
+# Run linter
+make lint
+
+# Build for all platforms
+make build-all
+
+# Generate coverage report
+make coverage
+```
+
+---
+
+## 📖 Documentation
+
+- [Architecture Guide](docs/ARCHITECTURE.md) - Internal workings
+- [Scripting Guide](docs/SCRIPTING_GUIDE.md) - Write your own scripts
+- [Changelog](CHANGELOG.md) - Version history
+
 ---
 
 ## 🤝 Contributing
 
-See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for internal details and [SCRIPTING_GUIDE.md](docs/SCRIPTING_GUIDE.md) to build your own agents.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing`)
+5. Open a Pull Request
 
-License: MIT
+See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for internal details.
+
+---
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) for details.

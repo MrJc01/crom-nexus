@@ -1,0 +1,54 @@
+# Binaries
+nexus
+nexus.exe
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Build artifacts
+dist/
+build/
+out/
+
+# Test artifacts
+coverage.out
+coverage.html
+*.test
+*.prof
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# Go workspace
+go.work
+go.work.sum
+
+# Dependency directories
+vendor/
+
+# Debug files
+debug
+*.log
+
+# Nexus user data (should not be committed)
+.nexus/
+test_log.json
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
